@@ -108,7 +108,11 @@
                   {% endif %}
                 {% endfor %}
               {% endif %}
-            <span class="link-card-group-label" title="Group">{{ link_group_label }}</span>
+            <a
+              href="#{{ link.group }}"
+              class="link-card-group-label"
+              aria-label="View {{ link_group_label }} group"
+            >{{ link_group_label }}</a>
             {% endif %}
           </header>
           {% if link.description %}
