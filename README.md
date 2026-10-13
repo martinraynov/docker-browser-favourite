@@ -43,7 +43,7 @@ make logs
 
 ## Configuration
 
-Edit [`_data/links.yml`](_data/links.yml) to add groups and links. Full field reference: [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
+Edit [`_data/links.yml`](_data/links.yml) to add groups and links (gitignored except the sample). To start from a sample with GitHub links and a multi-env card, copy [`_data/links.example.yml`](_data/links.example.yml) to `_data/links.yml`. Full field reference: [docs/CONFIGURATION.md](docs/CONFIGURATION.md).
 
 Jekyll watch reloads changes automatically while the container is running (source is volume-mounted).
 
@@ -59,7 +59,8 @@ Then open `http://localhost:4000`.
 ## Project layout
 
 ```
-├── _data/links.yml          # Groups and links
+├── _data/links.example.yml  # Sample config (in git)
+├── _data/links.yml          # Your links (gitignored; copy from sample)
 ├── _includes/               # Sidebar, cards, portal
 ├── _layouts/default.html
 ├── assets/css/              # Dashboard + link card styles

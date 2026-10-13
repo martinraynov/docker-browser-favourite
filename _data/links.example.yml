@@ -1,0 +1,75 @@
+# Copy to links.yml in this folder to run the portal locally:
+#   cp _data/links.example.yml _data/links.yml
+# See docs/CONFIGURATION.md for the full schema.
+
+site:
+  title: Bookmarks
+  subtitle: Example configuration
+
+all_group:
+  label: All
+  description: All links from every group
+
+environments:
+  - id: local
+    label: Local
+  - id: latest
+    label: Latest
+  - id: stage
+    label: Stage
+  - id: load
+    label: Load
+  - id: prod
+    label: Prod
+
+groups:
+  - id: favourites
+    label: Favourites
+    description: Daily shortcuts
+  - id: repos
+    label: Repositories
+    description: Git hosting and source code
+
+links:
+  # Single URL — full-width "URL" button (opens in same tab by default)
+  - id: github-home
+    group: repos
+    title: GitHub
+    url: https://github.com/
+    description: Public GitHub
+    tags: [github, git]
+    open_in_new_tab: true
+
+  - id: github-org
+    group: repos
+    title: GitHub Docs
+    url: https://github.com/github/docs
+    description: Example open-source repository
+    tags: [github, docs]
+
+  - id: github-explore
+    group: repos
+    title: Explore repositories
+    url: https://github.com/explore
+    description: Discover public projects
+    tags: [github]
+
+  # Multiple environments — env badge rows (Local full width, then Latest / Stage / Load / Prod)
+  - id: customer-portal
+    group: favourites
+    title: Customer portal
+    description: Same app deployed per environment
+    tags: [app, web]
+    urls:
+      local: http://localhost:3000/
+      latest: https://latest.app.example.com/
+      stage: https://stage.app.example.com/
+      load: https://load.app.example.com/
+      prod: https://app.example.com/
+
+  - id: metrics
+    group: favorites
+    title: Metrics dashboard
+    description: Single local URL only
+    tags: [monitoring]
+    url: http://localhost:9090/

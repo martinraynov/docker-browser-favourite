@@ -2,6 +2,12 @@
 
 All content is defined in [`_data/links.yml`](../_data/links.yml). Jekyll exposes this file as `site.data.links`.
 
+A starter file with **GitHub** bookmarks and a **multi-environment** link is in [`_data/links.example.yml`](../_data/links.example.yml) (tracked in git). Copy it to `_data/links.yml` for your local bookmarks (gitignored):
+
+```bash
+cp _data/links.example.yml _data/links.yml
+```
+
 ## Top-level structure
 
 | Key | Required | Description |
