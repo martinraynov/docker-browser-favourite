@@ -3,6 +3,32 @@
   overflow-y: auto;
 }
 
+.sidebar-nav-groups .sidebar-nav-item-all {
+  margin-bottom: 0.15rem;
+}
+
+.sidebar-nav-groups .sidebar-nav-group-nested {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.sidebar-nav-groups .sidebar-group-list {
+  list-style: none;
+  margin: 0 0 0 1.1rem;
+  padding: 0.1rem 0 0.35rem 0.85rem;
+  border-left: 1px solid rgba(255, 255, 255, 0.18);
+}
+
+.sidebar-nav-groups .sidebar-group-list .sidebar-nav-item {
+  margin: 0;
+}
+
+.sidebar-nav-groups .sidebar-group-list .sidebar-nav-link {
+  padding-left: 0.55rem;
+  font-size: 0.875rem;
+}
+
 .sidebar-footer {
   margin-top: auto;
   padding: 0.75rem 1rem 1rem;
