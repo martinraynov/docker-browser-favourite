@@ -1,0 +1,169 @@
+{% comment %}
+  Renders link cards for one group.
+  Parameters: include.group_id
+{% endcomment %}
+
+{% assign portal = site.data.links %}
+{% assign group_id = include.group_id %}
+{% assign link_count = 0 %}
+{% assign fallback_env_ids = "local,latest,stage,load,prod" | split: "," %}
+
+<div class="links-container" data-links-container="{{ group_id }}">
+  {% if portal.links %}
+    {% for link in portal.links %}
+      {% if link.group == group_id %}
+        {% assign link_count = link_count | plus: 1 %}
+        {% assign open_new = false %}
+        {% if link.open_in_new_tab == false or link.open_in_new_tab == "false" %}
+          {% assign open_new = false %}
+        {% elsif link.open_in_new_tab %}
+          {% assign open_new = true %}
+        {% endif %}
+
+        {% assign destination_count = 0 %}
+        {% assign card_href = nil %}
+        {% if link.urls %}
+          {% if portal.environments and portal.environments.size > 0 %}
+            {% for env_def in portal.environments %}
+              {% assign env_val = link.urls[env_def.id] %}
+              {% if env_val and env_val != "" %}
+                {% assign destination_count = destination_count | plus: 1 %}
+                {% assign card_href = env_val %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% for env_key in fallback_env_ids %}
+              {% assign env_val = link.urls[env_key] %}
+              {% if env_val and env_val != "" %}
+                {% assign destination_count = destination_count | plus: 1 %}
+                {% assign card_href = env_val %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% elsif link.url and link.url != "" %}
+          {% assign destination_count = 1 %}
+          {% assign card_href = link.url %}
+        {% endif %}
+
+        {% assign card_clickable = false %}
+        {% if destination_count == 1 %}
+          {% assign card_clickable = true %}
+        {% endif %}
+        {% assign show_env_badges = false %}
+        {% if link.urls and destination_count > 1 %}
+          {% assign show_env_badges = true %}
+        {% endif %}
+
+        {% assign search_blob = link.id | append: " " | append: link.title %}
+        {% if link.description %}
+          {% assign search_blob = search_blob | append: " " | append: link.description %}
+        {% endif %}
+        {% if link.tags %}
+          {% for tag in link.tags %}
+            {% assign search_blob = search_blob | append: " " | append: tag %}
+          {% endfor %}
+        {% endif %}
+        {% if link.url %}
+          {% assign search_blob = search_blob | append: " " | append: link.url %}
+        {% endif %}
+        {% if link.urls %}
+          {% if portal.environments and portal.environments.size > 0 %}
+            {% for env_def in portal.environments %}
+              {% assign env_val = link.urls[env_def.id] %}
+              {% if env_val and env_val != "" %}
+                {% assign search_blob = search_blob | append: " " | append: env_val %}
+              {% endif %}
+            {% endfor %}
+          {% else %}
+            {% for env_key in fallback_env_ids %}
+              {% assign env_val = link.urls[env_key] %}
+              {% if env_val and env_val != "" %}
+                {% assign search_blob = search_blob | append: " " | append: env_val %}
+              {% endif %}
+            {% endfor %}
+          {% endif %}
+        {% endif %}
+
+        <article
+          class="link-card{% if card_clickable %} link-card-is-clickable{% endif %}"
+          id="link-{{ link.id }}"
+          data-search="{{ search_blob | strip | downcase | escape }}"
+        >
+          {% if card_clickable %}
+          <a
+            href="{{ card_href }}"
+            class="link-card-stretch-link"
+            aria-label="Open {{ link.title | escape }}"
+            {% if open_new %}target="_blank" rel="noopener noreferrer"{% endif %}
+          ></a>
+          {% endif %}
+
+          <header class="link-card-header">
+            <span class="link-card-title">{{ link.title }}</span>
+          </header>
+          {% if link.description %}
+          <p class="link-card-description">{{ link.description }}</p>
+          {% endif %}
+          {% if link.tags and link.tags.size > 0 %}
+          <ul class="link-card-tags" aria-label="Tags">
+            {% for tag in link.tags %}
+            <li class="link-card-tag">{{ tag }}</li>
+            {% endfor %}
+          </ul>
+          {% endif %}
+
+          {% if show_env_badges %}
+          <div class="link-environments" aria-label="Environment links">
+            {% if portal.environments and portal.environments.size > 0 %}
+              {% for env_def in portal.environments %}
+                {% assign env_key = env_def.id %}
+                {% assign env_label = env_def.label | default: env_key | capitalize %}
+                {% assign env_val = link.urls[env_key] %}
+                {% if env_val and env_val != "" %}
+                <a
+                  href="{{ env_val }}"
+                  class="env-badge {{ env_key }}"
+                  {% if open_new %}target="_blank" rel="noopener noreferrer"{% endif %}
+                >{{ env_label }}</a>
+                {% else %}
+                <span class="env-badge {{ env_key }} na" title="Not configured">{{ env_label }}</span>
+                {% endif %}
+              {% endfor %}
+            {% else %}
+              {% for env_key in fallback_env_ids %}
+                {% assign env_val = link.urls[env_key] %}
+                {% if env_val != nil %}
+                  {% assign env_label = env_key | capitalize %}
+                  {% if env_val != "" %}
+                  <a
+                    href="{{ env_val }}"
+                    class="env-badge {{ env_key }}"
+                    {% if open_new %}target="_blank" rel="noopener noreferrer"{% endif %}
+                  >{{ env_label }}</a>
+                  {% else %}
+                  <span class="env-badge {{ env_key }} na" title="Not configured">{{ env_label }}</span>
+                  {% endif %}
+                {% endif %}
+              {% endfor %}
+            {% endif %}
+          </div>
+          {% elsif card_clickable and card_href %}
+          <p class="link-card-url">{{ card_href }}</p>
+          {% endif %}
+        </article>
+      {% endif %}
+    {% endfor %}
+  {% endif %}
+
+  <div class="link-no-results hidden" data-no-results="{{ group_id }}" role="status">
+    <p class="link-group-empty-title">No matching links</p>
+    <p class="link-group-empty-text">Try a different search term or clear the search box.</p>
+  </div>
+
+  {% if link_count == 0 %}
+  <div class="link-group-empty" role="status">
+    <p class="link-group-empty-title">No links in this group yet</p>
+    <p class="link-group-empty-text">Add entries under <code>links</code> with <code>group: {{ group_id }}</code> in <code>_data/links.yml</code>.</p>
+  </div>
+  {% endif %}
+</div>

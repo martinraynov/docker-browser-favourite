@@ -1,2 +1,9 @@
 tmp/
 .vscode
+_site/
+.jekyll-cache/
+.sass-cache/
+.jekyll-metadata
+vendor/
+.bundle/
+_data/*

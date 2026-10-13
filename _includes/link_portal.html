@@ -1,0 +1,168 @@
+{% assign portal = site.data.links %}
+{% assign first_group = portal.groups | first %}
+
+<div class="dashboard-page-header">
+  <h2 class="dashboard-page-title" id="link-group-title">{% if first_group %}{{ first_group.label }}{% else %}Links{% endif %}</h2>
+  <p class="dashboard-page-meta" id="link-group-meta">
+    {% if first_group %}{{ first_group.description }}{% endif %}
+  </p>
+</div>
+
+<section class="at-a-glance link-search-section" aria-label="Search links">
+  <div class="at-a-glance-row">
+    <div class="at-a-glance-stat-card">
+      <span class="stat-number" id="link-visible-count">0</span>
+      <span class="stat-label">Links shown</span>
+    </div>
+    <div class="services-search">
+      <label class="visually-hidden" for="link-search">Search links</label>
+      <input
+        type="search"
+        id="link-search"
+        class="search-input"
+        placeholder="Search by title, description, tag, or URL…"
+        autocomplete="off"
+      />
+    </div>
+  </div>
+</section>
+
+<div class="link-group-panels">
+  {% if portal.groups %}
+    {% for group in portal.groups %}
+      {% if group.id == 'favorites' %}
+      <section
+        class="link-group-panel hidden"
+        data-group="{{ group.id }}"
+        data-label="{{ group.label | escape }}"
+        data-description="{{ group.description | escape }}"
+        aria-label="{{ group.label }}"
+      >
+        {% include link_cards.html group_id=group.id %}
+      </section>
+      {% endif %}
+    {% endfor %}
+    {% for group in portal.groups %}
+      {% unless group.id == 'favorites' %}
+      <section
+        class="link-group-panel hidden"
+        data-group="{{ group.id }}"
+        data-label="{{ group.label | escape }}"
+        data-description="{{ group.description | escape }}"
+        aria-label="{{ group.label }}"
+      >
+        {% include link_cards.html group_id=group.id %}
+      </section>
+      {% endunless %}
+    {% endfor %}
+  {% else %}
+    <p class="link-group-empty-text">No groups defined in <code>_data/links.yml</code>.</p>
+  {% endif %}
+</div>
+
+<script>
+  (function() {
+    var sidebar = document.getElementById('link-group-sidebar');
+    var panels = document.querySelectorAll('.link-group-panel');
+    var titleEl = document.getElementById('link-group-title');
+    var metaEl = document.getElementById('link-group-meta');
+    var searchInput = document.getElementById('link-search');
+    var visibleCountEl = document.getElementById('link-visible-count');
+    if (!panels.length) return;
+
+    function normalizeHash(hash) {
+      return (hash || '').replace(/^#/, '').trim();
+    }
+
+    function getActivePanel() {
+      for (var i = 0; i < panels.length; i++) {
+        if (!panels[i].classList.contains('hidden')) return panels[i];
+      }
+      return panels[0];
+    }
+
+    function applySearch() {
+      var panel = getActivePanel();
+      if (!panel) return;
+      var query = (searchInput && searchInput.value || '').trim().toLowerCase();
+      var cards = panel.querySelectorAll('.link-card');
+      var visible = 0;
+      for (var i = 0; i < cards.length; i++) {
+        var card = cards[i];
+        var haystack = card.getAttribute('data-search') || '';
+        var match = !query || haystack.indexOf(query) !== -1;
+        card.classList.toggle('hidden', !match);
+        if (match) visible++;
+      }
+      var noResults = panel.querySelector('[data-no-results]');
+      if (noResults) {
+        noResults.classList.toggle('hidden', visible > 0 || cards.length === 0);
+      }
+      if (visibleCountEl) visibleCountEl.textContent = String(visible);
+    }
+
+    function setActiveGroup(groupId) {
+      var activePanel = null;
+      for (var i = 0; i < panels.length; i++) {
+        var panel = panels[i];
+        var isActive = panel.getAttribute('data-group') === groupId;
+        panel.classList.toggle('hidden', !isActive);
+        if (isActive) activePanel = panel;
+      }
+
+      if (sidebar) {
+        var triggers = sidebar.querySelectorAll('.sidebar-group-trigger');
+        for (var j = 0; j < triggers.length; j++) {
+          var trigger = triggers[j];
+          var selected = trigger.getAttribute('data-group') === groupId;
+          trigger.classList.toggle('active', selected);
+          trigger.setAttribute('aria-selected', selected ? 'true' : 'false');
+        }
+      }
+
+      if (activePanel) {
+        if (titleEl) titleEl.textContent = activePanel.getAttribute('data-label') || '';
+        if (metaEl) metaEl.textContent = activePanel.getAttribute('data-description') || '';
+        if (window.history && window.history.replaceState) {
+          var url = window.location.pathname + window.location.search + '#' + groupId;
+          window.history.replaceState(null, '', url);
+        }
+      }
+
+      applySearch();
+    }
+
+    function resolveInitialGroup() {
+      var hashGroup = normalizeHash(window.location.hash);
+      for (var i = 0; i < panels.length; i++) {
+        if (panels[i].getAttribute('data-group') === hashGroup) return hashGroup;
+      }
+      return panels[0].getAttribute('data-group');
+    }
+
+    if (sidebar) {
+      sidebar.addEventListener('click', function(e) {
+        var trigger = e.target.closest('.sidebar-group-trigger');
+        if (!trigger || !sidebar.contains(trigger)) return;
+        setActiveGroup(trigger.getAttribute('data-group'));
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', applySearch);
+      searchInput.addEventListener('search', applySearch);
+    }
+
+    window.addEventListener('hashchange', function() {
+      var hashGroup = normalizeHash(window.location.hash);
+      for (var i = 0; i < panels.length; i++) {
+        if (panels[i].getAttribute('data-group') === hashGroup) {
+          setActiveGroup(hashGroup);
+          return;
+        }
+      }
+    });
+
+    setActiveGroup(resolveInitialGroup());
+  })();
+</script>
