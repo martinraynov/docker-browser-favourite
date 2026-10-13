@@ -1,0 +1,52 @@
+{% assign portal = site.data.links %}
+{% assign site_title = portal.site.title | default: site.title %}
+{% assign site_subtitle = portal.site.subtitle | default: site.description %}
+{% assign component_version = site.component_version | default: portal.site.version %}
+{% assign all_label = portal.all_group.label | default: "All" %}
+
+<nav class="dashboard-sidebar" role="navigation" aria-label="Link groups">
+  <div class="sidebar-brand">
+    <div class="sidebar-logo-row">
+      <a href="{{ '/' | relative_url }}" class="sidebar-logo-link" aria-label="Home">
+        <img src="{{ '/assets/images/mr-logo.png' | relative_url }}" alt="Martin Raynov" class="sidebar-logo-img sidebar-logo-img-mr" width="48" height="48">
+      </a>
+      <div class="sidebar-logo-title-block">
+        <span class="sidebar-logo-text">{{ site_title }}</span>
+        {% if site_subtitle %}
+        <span class="sidebar-catalog-version">{{ site_subtitle }}</span>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <ul class="sidebar-nav sidebar-nav-groups" id="link-group-sidebar">
+    <li class="sidebar-nav-item sidebar-nav-item-all">
+      <button type="button" class="sidebar-nav-link sidebar-group-trigger" data-group="all" aria-selected="false">
+        <svg class="sidebar-nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>{{ all_label }}</span>
+      </button>
+    </li>
+    {% if portal.groups %}
+    <li class="sidebar-nav-group-nested">
+      <ul class="sidebar-nav-tree sidebar-group-list" aria-label="Groups under {{ all_label }}">
+        {% for group in portal.groups %}
+          {% unless group.id == 'all' %}
+          <li class="sidebar-nav-item">
+            <button type="button" class="sidebar-nav-link sidebar-group-trigger" data-group="{{ group.id }}" aria-selected="false">
+              <svg class="sidebar-nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+              <span>{{ group.label }}</span>
+            </button>
+          </li>
+          {% endunless %}
+        {% endfor %}
+      </ul>
+    </li>
+    {% endif %}
+  </ul>
+
+  {% if component_version %}
+  <div class="sidebar-footer">
+    <span class="sidebar-component-version" aria-label="Component version">v{{ component_version }}</span>
+  </div>
+  {% endif %}
+</nav>

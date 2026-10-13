@@ -1,0 +1,33 @@
+remote_theme: pages-themes/cayman@v0.2.0
+title: Browser Favourites
+description: Local landing page for favourite links and bookmark groups
+
+author: Martin Raynov
+repository_url: https://github.com/martinraynov/docker-browser-favourite
+
+# Bump when releasing; shown at the bottom of the sidebar
+component_version: "1.0.0"
+
+markdown: kramdown
+kramdown:
+  input: GFM
+  syntax_highlighter: rouge
+
+plugins:
+  - jekyll-remote-theme
+  - jekyll-seo-tag
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - Makefile
+  - README.md
+  - .gitignore
+  - .dockerignore
+  - .ruby-version
+  - docker/
+  - docs/
+  - .git/
+  - vendor/
+  - .bundle/
+  - node_modules/

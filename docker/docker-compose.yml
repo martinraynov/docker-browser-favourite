@@ -1,0 +1,29 @@
+services:
+  browser:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: browser
+    environment:
+      - JEKYLL_DISABLE_LIVERELOAD=1
+    networks:
+      - lb-common
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.middlewares.browser-redirect.redirectscheme.scheme=https"
+      - "traefik.http.middlewares.browser-redirect.redirectscheme.permanent=true"
+      - "traefik.http.routers.browser.rule=Host(`bookmarks.local.io`)"
+      - "traefik.http.routers.browser.entrypoints=web"
+      - "traefik.http.routers.browser.middlewares=browser-redirect"
+      - "traefik.http.routers.browser-https.rule=Host(`bookmarks.local.io`)"
+      - "traefik.http.routers.browser-https.entrypoints=websecure"
+      - "traefik.http.routers.browser-https.tls=true"
+      - "traefik.http.routers.browser-https.tls.certresolver=letsencrypt"
+      - "traefik.http.services.browser.loadbalancer.server.port=4000"
+    volumes:
+      - ../:/srv/jekyll
+    restart: unless-stopped
+
+networks:
+  lb-common:
+    external: true
