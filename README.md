@@ -24,7 +24,7 @@ make start
 3. Open:
 
 ```
-https://browser.local.io
+https://bookmarks.local.io
 ```
 
 HTTP redirects to HTTPS. LiveReload is disabled when served over Traefik to avoid mixed content.

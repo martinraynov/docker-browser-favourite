@@ -7,7 +7,7 @@ help: ## Prints this help message
 ######################
 ### MAIN FUNCTIONS ###
 ######################
-SERVICE=browser
+SERVICE=bookmarks
 
 .PHONY: start
 start: ## Start the SERVICE docker container (rebuilds and recreates)
