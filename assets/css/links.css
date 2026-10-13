@@ -89,6 +89,10 @@
 
 .link-card-header {
   margin-bottom: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.35rem 0.5rem;
 }
 
 .link-card-title {
@@ -96,6 +100,17 @@
   font-weight: 600;
   color: #24292e;
   margin: 0;
+}
+
+.link-card-group-label {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #586069;
+  padding: 0.12rem 0.45rem;
+  border-radius: 4px;
+  background: #f6f8fa;
+  border: 1px solid #e1e4e8;
+  line-height: 1.3;
 }
 
 .link-card-description {
@@ -174,11 +189,41 @@
 
 .link-environments {
   display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
+  flex-direction: column;
+  gap: 0.45rem;
   margin-top: 0.25rem;
   position: relative;
   z-index: 2;
+}
+
+.link-env-row {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.link-env-row-local {
+  width: 100%;
+}
+
+.link-env-row-local .env-badge {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  text-align: center;
+}
+
+.link-env-row-shared {
+  flex-wrap: nowrap;
+}
+
+.link-env-row-shared .env-badge {
+  flex: 1 1 0;
+  min-width: 0;
+  padding-left: 0.35rem;
+  padding-right: 0.35rem;
+  font-size: 0.75rem;
 }
 
 .env-badge {

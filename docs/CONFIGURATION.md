@@ -7,8 +7,9 @@ All content is defined in [`_data/links.yml`](../_data/links.yml). Jekyll expose
 | Key | Required | Description |
 |-----|----------|-------------|
 | `site` | No | Branding shown in the sidebar |
+| `all_group` | No | Label and description for the virtual **All** sidebar entry (always first; id is `all`) |
 | `environments` | No | Env badge order and labels when using per-env URLs |
-| `groups` | Yes | Sidebar sections (Favorites should use `id: favorites` and be listed first) |
+| `groups` | Yes | Sidebar sections (do not use `id: all`; that view is built-in) |
 | `links` | Yes | Bookmark cards assigned to a group |
 
 ## `site`
@@ -18,6 +19,15 @@ All content is defined in [`_data/links.yml`](../_data/links.yml). Jekyll expose
 | `title` | Main title next to the logo (falls back to `_config.yml` `title`) |
 | `subtitle` | Short tagline under the title in the sidebar |
 | `version` | Optional; sidebar footer version if `component_version` is not set in [`_config.yml`](../_config.yml) |
+
+## `all_group`
+
+Optional. Controls the built-in **All** group (first in the sidebar, shows every link). You do not add links with `group: all`.
+
+| Field | Description |
+|-------|-------------|
+| `label` | Sidebar label (default `All`) |
+| `description` | Shown under the page title when All is selected |
 
 **Component version (sidebar footer):** set `component_version` in [`_config.yml`](../_config.yml) (e.g. `"1.0.0"`). Bump it when you release an update to this portal.
 
@@ -47,7 +57,7 @@ Each entry:
 **Rules:**
 
 - Every `link.group` must match a group `id`.
-- Use `id: favorites` for the favourites section and keep it first in the list (the sidebar also forces `favorites` to the top if present).
+- Do not use `id: all` in `groups`; the All view is automatic and always listed first.
 
 ## `links`
 
@@ -66,7 +76,7 @@ Each entry:
 
 **URL modes:**
 
-1. **Single URL** — set `url` only, or `urls` with exactly one non-empty value. The **whole card** is clickable (title is plain text); the URL is shown at the bottom.
+1. **Single URL** — set `url` only, or `urls` with exactly one non-empty value. A **full-width environment-style button** is shown (same layout as the Local row on multi-env cards). Plain `url` uses the Local label; a single `urls` entry uses that environment’s label and colors.
 2. **Multiple environments** — set `urls` with two or more non-empty values. The card is not clickable as a whole; use the **environment badges** to open each URL.
 
 ## Search

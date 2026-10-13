@@ -1,0 +1,13 @@
+{% comment %}
+  Single environment badge (link or disabled).
+  Parameters: env_key, env_label, env_val, open_new
+{% endcomment %}
+{% if include.env_val and include.env_val != "" %}
+<a
+  href="{{ include.env_val }}"
+  class="env-badge {{ include.env_key }}"
+  {% if include.open_new %}target="_blank" rel="noopener noreferrer"{% endif %}
+>{{ include.env_label }}</a>
+{% else %}
+<span class="env-badge {{ include.env_key }} na" title="Not configured">{{ include.env_label }}</span>
+{% endif %}

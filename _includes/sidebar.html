@@ -2,6 +2,7 @@
 {% assign site_title = portal.site.title | default: site.title %}
 {% assign site_subtitle = portal.site.subtitle | default: site.description %}
 {% assign component_version = site.component_version | default: portal.site.version %}
+{% assign all_label = portal.all_group.label | default: "All" %}
 
 <nav class="dashboard-sidebar" role="navigation" aria-label="Link groups">
   <div class="sidebar-brand">
@@ -19,19 +20,15 @@
   </div>
 
   <ul class="sidebar-nav sidebar-nav-groups" id="link-group-sidebar">
+    <li class="sidebar-nav-item">
+      <button type="button" class="sidebar-nav-link sidebar-group-trigger" data-group="all" aria-selected="false">
+        <svg class="sidebar-nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+        <span>{{ all_label }}</span>
+      </button>
+    </li>
     {% if portal.groups %}
       {% for group in portal.groups %}
-        {% if group.id == 'favorites' %}
-        <li class="sidebar-nav-item">
-          <button type="button" class="sidebar-nav-link sidebar-group-trigger" data-group="{{ group.id }}" aria-selected="false">
-            <svg class="sidebar-nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-            <span>{{ group.label }}</span>
-          </button>
-        </li>
-        {% endif %}
-      {% endfor %}
-      {% for group in portal.groups %}
-        {% unless group.id == 'favorites' %}
+        {% unless group.id == 'all' %}
         <li class="sidebar-nav-item">
           <button type="button" class="sidebar-nav-link sidebar-group-trigger" data-group="{{ group.id }}" aria-selected="false">
             <svg class="sidebar-nav-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>

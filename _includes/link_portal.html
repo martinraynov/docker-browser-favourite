@@ -1,11 +1,10 @@
 {% assign portal = site.data.links %}
-{% assign first_group = portal.groups | first %}
+{% assign all_label = portal.all_group.label | default: "All" %}
+{% assign all_description = portal.all_group.description | default: "All links from every group" %}
 
 <div class="dashboard-page-header">
-  <h2 class="dashboard-page-title" id="link-group-title">{% if first_group %}{{ first_group.label }}{% else %}Links{% endif %}</h2>
-  <p class="dashboard-page-meta" id="link-group-meta">
-    {% if first_group %}{{ first_group.description }}{% endif %}
-  </p>
+  <h2 class="dashboard-page-title" id="link-group-title">{{ all_label }}</h2>
+  <p class="dashboard-page-meta" id="link-group-meta">{{ all_description }}</p>
 </div>
 
 <section class="at-a-glance link-search-section" aria-label="Search links">
@@ -28,22 +27,19 @@
 </section>
 
 <div class="link-group-panels">
+  <section
+    class="link-group-panel hidden"
+    data-group="all"
+    data-label="{{ all_label | escape }}"
+    data-description="{{ all_description | escape }}"
+    aria-label="{{ all_label }}"
+  >
+    {% include link_cards.html group_id="all" %}
+  </section>
+
   {% if portal.groups %}
     {% for group in portal.groups %}
-      {% if group.id == 'favorites' %}
-      <section
-        class="link-group-panel hidden"
-        data-group="{{ group.id }}"
-        data-label="{{ group.label | escape }}"
-        data-description="{{ group.description | escape }}"
-        aria-label="{{ group.label }}"
-      >
-        {% include link_cards.html group_id=group.id %}
-      </section>
-      {% endif %}
-    {% endfor %}
-    {% for group in portal.groups %}
-      {% unless group.id == 'favorites' %}
+      {% unless group.id == 'all' %}
       <section
         class="link-group-panel hidden"
         data-group="{{ group.id }}"
@@ -137,7 +133,7 @@
       for (var i = 0; i < panels.length; i++) {
         if (panels[i].getAttribute('data-group') === hashGroup) return hashGroup;
       }
-      return panels[0].getAttribute('data-group');
+      return 'all';
     }
 
     if (sidebar) {
